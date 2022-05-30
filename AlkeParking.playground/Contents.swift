@@ -94,10 +94,9 @@ let bus20 = Vehicle(plate: "DD444II", type: .bus, checkInTime: Date(), discountC
 // Limit
 let car21 = Vehicle(plate: "AA111EE", type: .car, checkInTime: Date(), discountCard: "DISCOUNT_CARD_008")
 
-
 let vehicles = [car1, car2, car3, car4, car5, motocycle6, motocycle7, motocycle8, motocycle9, motocycle10, miniBus11, miniBus12, miniBus13, miniBus14, miniBus15, bus16, bus17, bus18, bus19, car21, bus20]
 
-var n = 1
+var n: Int = 1
 for vehicle in vehicles {
     
     alkeParking.checkInVehicle(vehicle) { success in
