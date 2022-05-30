@@ -69,3 +69,22 @@ alkeParking.vehicles.insert(moto) // True
 alkeParking.vehicles.insert(miniBus) // True
 
 alkeParking.vehicles.insert(bus) // True
+
+// Same vehicle
+let car2 = Vehicle(plate: "AA111AA", type: .car, checkInTime: Date(), discountCard: "DISCOUNT_CARD_003")
+
+print(alkeParking.vehicles.insert(car2).inserted) // false
+
+// Remove vehicle
+print("Before remove moto")
+
+for vehicle in alkeParking.vehicles {
+    print(vehicle.type)
+}
+
+print("After remove moto")
+alkeParking.vehicles.remove(moto)
+
+for vehicle in alkeParking.vehicles {
+    print(vehicle.type)
+}
