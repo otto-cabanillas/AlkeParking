@@ -1,6 +1,6 @@
 import UIKit
 
-// MARK: AlkeParking Exercise 2
+// MARK: AlkeParking Exercise 3
 
 protocol Parkable {
     var plate: String { get }
