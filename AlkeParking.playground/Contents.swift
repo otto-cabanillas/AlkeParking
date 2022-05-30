@@ -1,6 +1,6 @@
 import UIKit
 
-// MARK: AlkeParking Exercise 5
+// MARK: AlkeParking Exercise 6
 
 protocol Parkable {
     var plate: String { get }
@@ -91,30 +91,25 @@ let bus20 = Vehicle(plate: "DD444II", type: .bus, checkInTime: Date(), discountC
 // Plate duplicate
 //let bus20 = Vehicle(plate: "CC333GG", type: .bus, checkInTime: Date(), discountCard: nil)
 
+// Limit
+let car21 = Vehicle(plate: "AA111EE", type: .car, checkInTime: Date(), discountCard: "DISCOUNT_CARD_008")
 
-let vehicles = [car1, car2, car3, car4, car5, motocycle6, motocycle7, motocycle8, motocycle9, motocycle10, miniBus11, miniBus12, miniBus13, miniBus14, miniBus15, bus16, bus17, bus18, bus19, bus20]
+
+let vehicles = [car1, car2, car3, car4, car5, motocycle6, motocycle7, motocycle8, motocycle9, motocycle10, miniBus11, miniBus12, miniBus13, miniBus14, miniBus15, bus16, bus17, bus18, bus19, car21, bus20]
 
 var n = 1
 for vehicle in vehicles {
     
     alkeParking.checkInVehicle(vehicle) { success in
-        success ? print("Welcome to AlkeParking! \(n)"  ): print("Sorry, the check-in failed")
-        n += 1
+        if success {
+            print("Welcome to AlkeParking! \(n)")
+            n += 1
+        } else {
+            print("Sorry, the check-in failed")
+        }
     }
 }
 
 alkeParking.vehicles.count
 
-// Limit
-let car21 = Vehicle(plate: "AA111EE", type: .car, checkInTime: Date(), discountCard: "DISCOUNT_CARD_008")
-let motocycle22 = Vehicle(plate: "B222FFF", type: .motocycle, checkInTime: Date(), discountCard: nil)
 
-alkeParking.checkInVehicle(car21) { success in
-    success ? print("Welcome to AlkeParking!") : print("Sorry, the check-in failed")
-}
-
-alkeParking.checkInVehicle(motocycle22) { success in
-    success ? print("Welcome to AlkeParking!") : print("Sorry, the check-in failed")
-}
-
-alkeParking.vehicles.count
