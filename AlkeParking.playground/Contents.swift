@@ -1,6 +1,6 @@
 import UIKit
 
-// MARK: AlkeParking Exercise 4
+// MARK: AlkeParking Exercise 5
 
 protocol Parkable {
     var plate: String { get }
@@ -11,6 +11,15 @@ protocol Parkable {
 
 struct Parking {
     var vehicles: Set<Vehicle> = []
+    let parkingLimit = 20
+    
+    mutating func checkInVehicle(_ vehicle: Vehicle, onFinish: (Bool) -> Void) {
+        guard vehicles.count < parkingLimit && vehicles.insert(vehicle).inserted else {
+            return onFinish(false)
+        }
+        
+        return onFinish(true)
+    }
 }
 
 struct Vehicle: Parkable, Hashable {
@@ -54,37 +63,58 @@ enum VehicleType {
 
 var alkeParking = Parking()
 
-let car = Vehicle(plate: "AA111AA", type: .car, checkInTime: Date(), discountCard: "DISCOUNT_CARD_001")
+// 20 Vehicles
+let car1 = Vehicle(plate: "AA111AA", type: .car, checkInTime: Date(), discountCard: "DISCOUNT_CARD_001")
+let car2 = Vehicle(plate: "B222BBB", type: .car, checkInTime: Date(), discountCard: nil)
+let car3 = Vehicle(plate: "CC333CC", type: .car, checkInTime: Date(), discountCard: nil)
+let car4 = Vehicle(plate: "DD444DD", type: .car, checkInTime: Date(), discountCard: "DISCOUNT_CARD_002")
+let car5 = Vehicle(plate: "AA111BB", type: .car, checkInTime: Date(), discountCard: "DISCOUNT_CARD_003")
 
-let moto = Vehicle(plate: "B222BBB", type: .motocycle, checkInTime: Date(), discountCard: nil)
+let motocycle6 = Vehicle(plate: "B222CCC", type: .motocycle, checkInTime: Date(), discountCard: "DISCOUNT_CARD_004")
+let motocycle7 = Vehicle(plate: "CC333DD", type: .motocycle, checkInTime: Date(), discountCard: nil)
+let motocycle8 = Vehicle(plate: "DD444EE", type: .motocycle, checkInTime: Date(), discountCard: "DISCOUNT_CARD_005")
+let motocycle9 = Vehicle(plate: "AA111CC", type: .motocycle, checkInTime: Date(), discountCard: nil)
+let motocycle10 = Vehicle(plate: "B222DDD", type: .motocycle, checkInTime: Date(), discountCard: nil)
 
-let miniBus = Vehicle(plate: "CC333CC", type: .miniBus, checkInTime: Date(), discountCard: nil)
+let miniBus11 = Vehicle(plate: "CC333EE", type: .miniBus, checkInTime: Date(), discountCard: nil)
+let miniBus12 = Vehicle(plate: "DD444GG", type: .miniBus, checkInTime: Date(), discountCard: "DISCOUNT_CARD_006")
+let miniBus13 = Vehicle(plate: "AA111DD", type: .miniBus, checkInTime: Date(), discountCard: "DISCOUNT_CARD_007")
+let miniBus14 = Vehicle(plate: "B222EEE", type: .miniBus, checkInTime: Date(), discountCard: nil)
+let miniBus15 = Vehicle(plate: "CC333FF", type: .miniBus, checkInTime: Date(), discountCard: nil)
 
-let bus = Vehicle(plate: "DD444DD", type: VehicleType.bus, checkInTime: Date(), discountCard: "DISCOUNT_CARD_002")
+let bus16 = Vehicle(plate: "DD444HH", type: .bus, checkInTime: Date(), discountCard: nil)
+let bus17 = Vehicle(plate: "AA111EE", type: .bus, checkInTime: Date(), discountCard: "DISCOUNT_CARD_008")
+let bus18 = Vehicle(plate: "B222FFF", type: .bus, checkInTime: Date(), discountCard: nil)
+let bus19 = Vehicle(plate: "CC333GG", type: .bus, checkInTime: Date(), discountCard: "DISCOUNT_CARD_009")
+let bus20 = Vehicle(plate: "DD444II", type: .bus, checkInTime: Date(), discountCard: nil)
 
-alkeParking.vehicles.insert(car) // True
+// Plate duplicate
+//let bus20 = Vehicle(plate: "CC333GG", type: .bus, checkInTime: Date(), discountCard: nil)
 
-alkeParking.vehicles.insert(moto) // True
 
-alkeParking.vehicles.insert(miniBus) // True
+let vehicles = [car1, car2, car3, car4, car5, motocycle6, motocycle7, motocycle8, motocycle9, motocycle10, miniBus11, miniBus12, miniBus13, miniBus14, miniBus15, bus16, bus17, bus18, bus19, bus20]
 
-alkeParking.vehicles.insert(bus) // True
-
-// Same vehicle
-let car2 = Vehicle(plate: "AA111AA", type: .car, checkInTime: Date(), discountCard: "DISCOUNT_CARD_003")
-
-print(alkeParking.vehicles.insert(car2).inserted) // false
-
-// Remove vehicle
-print("Before remove moto")
-
-for vehicle in alkeParking.vehicles {
-    print(vehicle.type)
+var n = 1
+for vehicle in vehicles {
+    
+    alkeParking.checkInVehicle(vehicle) { success in
+        success ? print("Welcome to AlkeParking! \(n)"  ): print("Sorry, the check-in failed")
+        n += 1
+    }
 }
 
-print("After remove moto")
-alkeParking.vehicles.remove(moto)
+alkeParking.vehicles.count
 
-for vehicle in alkeParking.vehicles {
-    print(vehicle.type)
+// Limit
+let car21 = Vehicle(plate: "AA111EE", type: .car, checkInTime: Date(), discountCard: "DISCOUNT_CARD_008")
+let motocycle22 = Vehicle(plate: "B222FFF", type: .motocycle, checkInTime: Date(), discountCard: nil)
+
+alkeParking.checkInVehicle(car21) { success in
+    success ? print("Welcome to AlkeParking!") : print("Sorry, the check-in failed")
 }
+
+alkeParking.checkInVehicle(motocycle22) { success in
+    success ? print("Welcome to AlkeParking!") : print("Sorry, the check-in failed")
+}
+
+alkeParking.vehicles.count
