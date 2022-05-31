@@ -1,7 +1,7 @@
 import UIKit
 import Foundation
 
-// MARK: AlkeParking Exercise 9
+// MARK: AlkeParking Exercise 10
 
 protocol Parkable {
     var plate: String { get }
@@ -22,8 +22,16 @@ struct Parking {
     }
     
     mutating func checkOutVehicle(plate: String, onSuccess: (Int) ->(), onError: () -> ()) {
-        guard let vehicle = vehicles.first(where: {$0.plate == plate }) else {
-            return onError()
+        guard let vehicle = vehicles.first(where: { $0.plate == plate }) else {
+            onError()
+            return
+        }
+        let hasDiscound = vehicle.discountCard != nil
+        let fee = calculateFee(type: vehicle.type, parkedTime: vehicle.parkedTime, hasDiscountCard: hasDiscound)
+        vehicles.remove(vehicle)
+        register.vehicles += 1
+        register.earnings += fee
+        onSuccess(fee)
         }
         
         let hasDiscound = vehicle.discountCard != nil
