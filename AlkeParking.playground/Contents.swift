@@ -15,13 +15,14 @@ struct Parking {
     let parkingLimit = 20
     
     mutating func checkInVehicle(_ vehicle: Vehicle, onFinish: (Bool) -> Void) {
-        guard vehicles.count < parkingLimit && vehicles.insert(vehicle).inserted else {
-            return onFinish(false)
+        guard vehicles.count < parkingLimit, vehicles.insert(vehicle).inserted else {
+            onFinish(false)
+            return
         }
-        return onFinish(true)
+        onFinish(true)
     }
     
-    mutating func checkOutVehicle(plate: String, onSuccess: (Int) ->(), onError: () -> ()) {
+    mutating func checkOutVehicle(plate: String, onSuccess: (Int) -> Void, onError: () -> Void) {
         guard let vehicle = vehicles.first(where: { $0.plate == plate }) else {
             onError()
             return
@@ -29,20 +30,11 @@ struct Parking {
         let hasDiscound = vehicle.discountCard != nil
         let fee = calculateFee(type: vehicle.type, parkedTime: vehicle.parkedTime, hasDiscountCard: hasDiscound)
         vehicles.remove(vehicle)
-        register.vehicles += 1
-        register.earnings += fee
-        onSuccess(fee)
-        }
-        
-        let hasDiscound = vehicle.discountCard != nil
-        let fee = calculateFee(type: vehicle.type, parkedTime: vehicle.parkedTime, hasDiscountCard: hasDiscound)
-        vehicles.remove(vehicle)
         onSuccess(fee)
     }
     
-    func calculateFee(type: VehicleType, parkedTime: Int,hasDiscountCard: Bool) -> Int {
+    func calculateFee(type: VehicleType, parkedTime: Int, hasDiscountCard: Bool) -> Int {
         var fee = type.hourFee
-        print("fee: \(fee)")
         if parkedTime > 120 {
             let reminderMins = parkedTime - 120
             fee += Int(ceil(Double(reminderMins) / 15.0)) * 5
@@ -53,6 +45,7 @@ struct Parking {
         return fee
     }
     
+  
 }
 
 struct Vehicle: Parkable, Hashable {
