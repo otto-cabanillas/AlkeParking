@@ -8,6 +8,7 @@ protocol Parkable {
     var type: VehicleType { get }
     var checkInTime: Date { get }
     var discountCard: String? { get }
+    var parkedTime: Int { get }
 }
 
 struct Parking {
@@ -16,13 +17,14 @@ struct Parking {
     var register: (vehicles: Int, earnings: Int) = (0,0)
     
     mutating func checkInVehicle(_ vehicle: Vehicle, onFinish: (Bool) -> Void) {
-        guard vehicles.count < parkingLimit && vehicles.insert(vehicle).inserted else {
-            return onFinish(false)
+        guard vehicles.count < parkingLimit, vehicles.insert(vehicle).inserted else {
+            onFinish(false)
+            return
         }
-        return onFinish(true)
+        onFinish(true)
     }
     
-    mutating func checkOutVehicle(plate: String, onSuccess: (Int) ->(), onError: () -> ()) {
+    mutating func checkOutVehicle(plate: String, onSuccess: (Int) -> Void, onError: () -> Void) {
         guard let vehicle = vehicles.first(where: { $0.plate == plate }) else {
             onError()
             return
@@ -33,17 +35,10 @@ struct Parking {
         register.vehicles += 1
         register.earnings += fee
         onSuccess(fee)
-        }
-        
-        let hasDiscound = vehicle.discountCard != nil
-        let fee = calculateFee(type: vehicle.type, parkedTime: vehicle.parkedTime, hasDiscountCard: hasDiscound)
-        vehicles.remove(vehicle)
-        onSuccess(fee)
     }
     
-    func calculateFee(type: VehicleType, parkedTime: Int,hasDiscountCard: Bool) -> Int {
+    func calculateFee(type: VehicleType, parkedTime: Int, hasDiscountCard: Bool) -> Int {
         var fee = type.hourFee
-        print("fee: \(fee)")
         if parkedTime > 120 {
             let reminderMins = parkedTime - 120
             fee += Int(ceil(Double(reminderMins) / 15.0)) * 5
@@ -53,14 +48,12 @@ struct Parking {
         }
         return fee
     }
-
-func showEarnings() {
-    print("\(register.vehicles) vehicles have checked out and have earnings of $\(register.earnings)")
-}
-
+    
+    func showEarnings() {
+        print("\(register.vehicles) vehicles have checked out and have earnings of $\(register.earnings)")
+    }
     
 }
-
 struct Vehicle: Parkable, Hashable {
     let plate: String
     let type: VehicleType
@@ -139,7 +132,6 @@ let bus20 = Vehicle(plate: "DD444II", type: .bus, checkInTime: Date(), discountC
 
 // Plate duplicate
 //let bus20 = Vehicle(plate: "CC333GG", type: .bus, checkInTime: Date(), discountCard: nil)
-
 // Limit
 let car21 = Vehicle(plate: "AA111EE", type: .car, checkInTime: Date(), discountCard: "DISCOUNT_CARD_008")
 
@@ -171,5 +163,4 @@ alkeParking.checkOutVehicle(plate: "CC333GG") { Cost in
 
 alkeParking.vehicles.count
 
-
-
+alkeParking.showEarnings()
