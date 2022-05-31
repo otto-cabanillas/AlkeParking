@@ -1,7 +1,7 @@
 import UIKit
 import Foundation
 
-// MARK: AlkeParking Exercise 10
+// MARK: AlkeParking Exercise 11
 
 protocol Parkable {
     var plate: String { get }
@@ -13,6 +13,7 @@ protocol Parkable {
 struct Parking {
     var vehicles: Set<Vehicle> = []
     let parkingLimit = 20
+    var register: (vehicles: Int, earnings: Int) = (0,0)
     
     mutating func checkInVehicle(_ vehicle: Vehicle, onFinish: (Bool) -> Void) {
         guard vehicles.count < parkingLimit && vehicles.insert(vehicle).inserted else {
@@ -52,6 +53,11 @@ struct Parking {
         }
         return fee
     }
+
+func showEarnings() {
+    print("\(register.vehicles) vehicles have checked out and have earnings of $\(register.earnings)")
+}
+
     
 }
 
