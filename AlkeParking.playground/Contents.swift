@@ -1,6 +1,6 @@
 import UIKit
 
-// MARK: AlkeParking Exercise 11
+// MARK: AlkeParking Exercise 12
 
 protocol Parkable {
     var plate: String { get }
@@ -48,6 +48,12 @@ struct Parking {
     
     func showEarnings() {
         print("\(register.vehicles) vehicles have checked out and have earnings of $\(register.earnings)")
+    }
+    
+    func listVehicles() {
+        for vehicle in vehicles {
+            print("Vehicles: \(vehicle.plate)")
+        }
     }
     
 }
@@ -170,5 +176,5 @@ alkeParking.showEarnings()
 
 alkeParking.vehicles.count
 
-
+alkeParking.listVehicles()
 
