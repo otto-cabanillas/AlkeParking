@@ -1,6 +1,6 @@
 import UIKit
 
-// MARK: AlkeParking Exercise 10
+// MARK: AlkeParking Exercise 11
 
 protocol Parkable {
     var plate: String { get }
@@ -12,6 +12,7 @@ protocol Parkable {
 struct Parking {
     var vehicles: Set<Vehicle> = []
     let parkingLimit = 20
+    var register: (vehicles: Int, earnings: Int) = (0,0)
     
     mutating func checkInVehicle(_ vehicle: Vehicle, onFinish: (Bool) -> Void) {
         guard vehicles.count < parkingLimit && vehicles.insert(vehicle).inserted else {
@@ -27,6 +28,8 @@ struct Parking {
         let hasDiscound = vehicle.discountCard != nil
         let fee = calculateFee(type: vehicle.type, parkedTime: vehicle.parkedTime, hasDiscountCard: hasDiscound)
         vehicles.remove(vehicle)
+        register.vehicles += 1
+        register.earnings += fee
         onSuccess(fee)
     }
     
@@ -41,6 +44,10 @@ struct Parking {
             fee = Int(Double(fee) * 0.85)
         }
         return fee
+    }
+    
+    func showEarnings() {
+        print("\(register.vehicles) vehicles have checked out and have earnings of $\(register.earnings)")
     }
     
 }
@@ -148,10 +155,18 @@ bus19.parkedTime
 bus20.parkedTime
 
 alkeParking.checkOutVehicle(plate: "CC333GG") { Cost in
-    print("Su costo fue de \(Cost)")
+    print("Your fee is $\(Cost)")
 } onError: {
-    print("Disculpe tenemos problemas")
+    print("Sorry, the check-out failed")
 }
+
+alkeParking.checkOutVehicle(plate: "CC333FF") { Cost in
+    print("Your fee is $\(Cost)")
+} onError: {
+    print("Sorry, the check-out failed")
+}
+
+alkeParking.showEarnings()
 
 alkeParking.vehicles.count
 
