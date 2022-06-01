@@ -1,6 +1,6 @@
 import UIKit
 
-// MARK: AlkeParking Exercise 7
+// MARK: AlkeParking Exercise 8
 
 protocol Parkable {
     var plate: String { get }
@@ -24,8 +24,19 @@ struct Parking {
         guard let vehicle = vehicles.first(where: {$0.plate == plate }) else {
             return onError()
         }
+        let fee = calculateFee(type: vehicle.type, parkedTime: vehicle.parkedTime)
         vehicles.remove(vehicle)
-        onSuccess(99)
+        onSuccess(fee)
+    }
+    
+    func calculateFee(type: VehicleType, parkedTime: Int) -> Int {
+        var fee = type.hourFee
+        print("fee: \(fee)")
+        if parkedTime > 120 {
+            let reminderMins = parkedTime - 120
+            fee += Int(ceil(Double(reminderMins) / 15.0)) * 5
+        }
+        return fee
     }
 }
 
@@ -68,6 +79,15 @@ enum VehicleType {
     }
 }
 
+extension Date {
+    static func createDate(hour: Int, mins: Int) -> Date {
+        let dayCurrent = Calendar.current.date(bySettingHour: hour, minute: mins, second: 0, of: Date())
+        let someDateTime = dayCurrent
+        return someDateTime ?? Date()
+    }
+}
+
+
 var alkeParking = Parking()
 
 // 20 Vehicles
@@ -92,7 +112,7 @@ let miniBus15 = Vehicle(plate: "CC333FF", type: .miniBus, checkInTime: Date(), d
 let bus16 = Vehicle(plate: "DD444HH", type: .bus, checkInTime: Date(), discountCard: nil)
 let bus17 = Vehicle(plate: "AA111EE", type: .bus, checkInTime: Date(), discountCard: "DISCOUNT_CARD_008")
 let bus18 = Vehicle(plate: "B222FFF", type: .bus, checkInTime: Date(), discountCard: nil)
-let bus19 = Vehicle(plate: "CC333GG", type: .bus, checkInTime: Date(), discountCard: "DISCOUNT_CARD_009")
+let bus19 = Vehicle(plate: "CC333GG", type: .bus, checkInTime: Date.createDate(hour: 10, mins: 00), discountCard: "DISCOUNT_CARD_009")
 let bus20 = Vehicle(plate: "DD444II", type: .bus, checkInTime: Date(), discountCard: nil)
 
 // Plate duplicate
@@ -117,3 +137,6 @@ for vehicle in vehicles {
 }
 
 alkeParking.vehicles.count
+
+bus19.parkedTime
+bus20.parkedTime
