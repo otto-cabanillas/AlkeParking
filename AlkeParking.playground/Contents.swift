@@ -1,6 +1,6 @@
 import UIKit
 
-// MARK: AlkeParking Exercise 6
+// MARK: AlkeParking Exercise 7
 
 protocol Parkable {
     var plate: String { get }
@@ -17,8 +17,15 @@ struct Parking {
         guard vehicles.count < parkingLimit && vehicles.insert(vehicle).inserted else {
             return onFinish(false)
         }
-        
         return onFinish(true)
+    }
+    
+    mutating func checkOutVehicle(plate: String, onSuccess: (Int) ->(), onError: () -> ()) {
+        guard let vehicle = vehicles.first(where: {$0.plate == plate }) else {
+            return onError()
+        }
+        vehicles.remove(vehicle)
+        onSuccess(99)
     }
 }
 
@@ -110,5 +117,3 @@ for vehicle in vehicles {
 }
 
 alkeParking.vehicles.count
-
-
